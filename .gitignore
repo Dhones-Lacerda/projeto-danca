@@ -1,0 +1,25 @@
+# Java / Maven
+target/
+*.class
+
+# Angula / Node
+node_modules/
+dist/
+.angular/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Sistema operacional
+.DS.Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Ambiente e credenciais
+.env
+.env.*
+!.env.example
