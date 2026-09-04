@@ -1419,4 +1419,178 @@ Configurar dependências
 > A partir do backend, começaremos a trabalhar diretamente com Java e Spring Boot e explicaremos cada conceito antes de utilizá-lo.
 
 
+> # Diário Técnico — Configuração inicial do Backend
+>
+> ## Data
+>
+> 04/09/2026
+>
+> ## Objetivo da seção
+>
+> Configurar a aplicação Spring Boot para iniciar corretamente e estabelecer sua primeira comunicação com o banco de dados MySQL executado através do Docker.
+>
+> ## 1. Criação do projeto Spring Boot
+>
+> O backend foi criado utilizando:
+>
+> * Java 25
+> * Spring Boot 4.1.1
+> * Maven
+> * Spring Web
+> * Spring Data JPA
+> * Bean Validation
+> * MySQL Driver
+>
+> O Maven Wrapper foi mantido no projeto para permitir que os comandos Maven sejam executados sem depender da instalação global do Maven na máquina.
+>
+> O comando utilizado para validar o ambiente foi:
+>
+> ```powershell
+> .\mvnw.cmd test
+> ```
+>
+> ## 2. Primeiro problema encontrado
+>
+> Ao executar os testes inicialmente, o Spring Boot não conseguiu carregar o `ApplicationContext`.
+>
+> A causa encontrada no relatório do Surefire foi:
+>
+> ```text
+> Failed to determine a suitable driver class
+> ```
+>
+> Isso indicava que o Spring Boot possuía as dependências necessárias para trabalhar com banco de dados, mas ainda não havia uma configuração de datasource suficiente para determinar como acessar o MySQL.
+>
+> ### Aprendizado
+>
+> Adicionar o MySQL Driver ao Maven não configura automaticamente a conexão com o banco.
+>
+> São responsabilidades diferentes:
+>
+> ```text
+> MySQL Driver
+>     ↓
+> Permite comunicação com MySQL
+>
+> application.yaml
+>     ↓
+> Define como e onde realizar a conexão
+> ```
+>
+> ## 3. Configuração do application.yaml
+>
+> Foi configurado:
+>
+> ```yaml
+> spring:
+>   application:
+>     name: projeto-danca
+>
+>   datasource:
+>     url: jdbc:mysql://localhost:3307/projeto_danca
+>     username: ${DB_USERNAME}
+>     password: ${DB_PASSWORD}
+>
+>   jpa:
+>     hibernate:
+>       ddl-auto: validate
+>     open-in-view: false
+> ```
+>
+> ## 4. Variáveis de ambiente
+>
+> As credenciais não foram colocadas diretamente no código Java.
+>
+> Foi utilizada a seguinte abordagem:
+>
+> ```yaml
+> username: ${DB_USERNAME}
+> password: ${DB_PASSWORD}
+> ```
+>
+> Durante a execução local pelo PowerShell, as variáveis foram disponibilizadas na sessão:
+>
+> ```powershell
+> $env:DB_USERNAME="projeto"
+> $env:DB_PASSWORD="projeto123"
+> ```
+>
+> ## 5. Segundo problema encontrado
+>
+> Após configurar o `application.yaml`, surgiu um erro de sintaxe YAML:
+>
+> ```text
+> mapping values are not allowed here
+> ```
+>
+> O problema estava relacionado a uma duplicação acidental na configuração:
+>
+> ```text
+> open-in-view: falseen-in-view: false
+> ```
+>
+> Após a correção, o YAML passou a ser interpretado corretamente.
+>
+> ### Aprendizado
+>
+> YAML é sensível à sintaxe e à estrutura. Um pequeno erro de edição pode impedir o Spring Boot de iniciar antes mesmo da execução da lógica Java.
+>
+> ## 6. Validação final
+>
+> Após a correção, o teste foi executado novamente:
+>
+> ```powershell
+> .\mvnw.cmd test
+> ```
+>
+> Resultado:
+>
+> ```text
+> BUILD SUCCESS
+> ```
+>
+> Isso confirma que:
+>
+> * o Spring Boot conseguiu carregar o contexto;
+> * a configuração do datasource foi reconhecida;
+> * o JPA/Hibernate conseguiu inicializar;
+> * o teste `contextLoads` passou.
+>
+> ## 7. Decisão sobre ddl-auto
+>
+> Foi utilizado:
+>
+> ```yaml
+> ddl-auto: validate
+> ```
+>
+> O Hibernate deverá verificar a compatibilidade entre as entidades Java e o schema MySQL, mas não deverá criar ou alterar automaticamente as tabelas.
+>
+> ## 8. Estado ao final da seção
+>
+> A infraestrutura inicial do backend está validada.
+>
+> Fluxo atual:
+>
+> ```text
+> Spring Boot
+>     ↓
+> DataSource / HikariCP
+>     ↓
+> MySQL Driver
+>     ↓
+> localhost:3307
+>     ↓
+> Docker
+>     ↓
+> MySQL
+>     ↓
+> projeto_danca
+> ```
+>
+> ## Próxima etapa
+>
+> **TASK-015 — Criar a entidade `Interessado`.**
+
+
 

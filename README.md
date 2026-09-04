@@ -1143,4 +1143,85 @@ Esses recursos poderão ser avaliados em versões futuras.
 > Este documento deverá ser atualizado ao final de cada seção importante do desenvolvimento.
 
 
+> ## Progresso do projeto
+>
+> ### Concluído
+>
+> #### Fundação e infraestrutura
+>
+> * [x] Estrutura inicial do projeto
+> * [x] Git inicializado
+> * [x] `.gitignore`
+> * [x] Documentação inicial
+> * [x] Docker Compose configurado
+> * [x] Container MySQL configurado
+> * [x] Volume persistente do MySQL
+> * [x] Banco de dados `projeto_danca`
+> * [x] Tabela `interessado`
+> * [x] Projeto Spring Boot criado
+> * [x] Maven Wrapper configurado
+> * [x] Dependências iniciais adicionadas
+> * [x] Configuração do `application.yaml`
+> * [x] Conexão do Spring Boot com MySQL configurada
+> * [x] Teste de carregamento do contexto Spring Boot executado com sucesso
+>
+> ### Em andamento
+>
+> #### Backend
+>
+> * [ ] Criar entidade `Interessado`
+> * [ ] Criar enums
+> * [ ] Criar repository
+> * [ ] Criar DTOs
+> * [ ] Criar service
+> * [ ] Criar controller
+> * [ ] Implementar endpoints CRUD
+> * [ ] Implementar tratamento de exceções
+> * [ ] Configurar Swagger/OpenAPI
+> * [ ] Criar testes automatizados
+>
+> ### Próxima tarefa
+>
+> **TASK-015 — Criar a entidade `Interessado`.**
+>
+> A entidade será responsável por representar, no domínio Java/JPA, os dados persistidos na tabela `interessado`.
+>
+> ---
+>
+> ## Histórico de desenvolvimento
+>
+> ### Seção — Configuração inicial do Backend
+>
+> Nesta etapa foi criado o projeto Spring Boot utilizando Maven e Java 25.
+>
+> Foram adicionadas as dependências necessárias para a primeira fase do backend:
+>
+> * Spring Web
+> * Spring Data JPA
+> * Bean Validation
+> * MySQL Driver
+>
+> Também foi configurado o arquivo `application.yaml`, estabelecendo a conexão com o banco MySQL executado em Docker.
+>
+> A aplicação utiliza:
+>
+> * `localhost:3307` para acessar o MySQL publicado pelo Docker;
+> * banco `projeto_danca`;
+> * variáveis de ambiente para usuário e senha;
+> * `ddl-auto: validate`, evitando alterações automáticas no schema pelo Hibernate;
+> * `open-in-view: false`.
+>
+> A aplicação foi validada por meio do Maven Wrapper:
+>
+> ```powershell
+> .\mvnw.cmd test
+> ```
+>
+> Resultado:
+>
+> ```text
+> BUILD SUCCESS
+> ```
+>
+> Com isso, a infraestrutura inicial do backend está validada e pronta para o desenvolvimento da camada de domínio.
 
