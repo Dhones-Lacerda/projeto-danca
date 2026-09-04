@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: projeto-danca
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/projeto_danca
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
