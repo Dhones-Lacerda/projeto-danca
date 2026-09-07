@@ -55,6 +55,24 @@ public class Interessado {
     protected Interessado() {
     }
 
+    public Interessado(
+        String nome,
+        String email,
+        String telefone,
+        LocalDate dataNascimento,
+        NivelExperiencia nivelExperiencia,
+        EstiloDanca estiloDanca,
+        String observacoes
+    ) {
+        this.nome = nome;
+        this.email = email;
+        this.telefone = telefone;
+        this.dataNascimento = dataNascimento;
+        this.nivelExperiencia = nivelExperiencia;
+        this.estiloDanca = estiloDanca;
+        this.observacoes = observacoes;
+    }
+
     public Long getId() {
         return id;
     }
