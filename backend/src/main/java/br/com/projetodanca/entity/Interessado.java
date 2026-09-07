@@ -1,16 +1,17 @@
 package br.com.projetodanca.entity;
 
+import br.com.projetodanca.enums.EstiloDanca;
+import br.com.projetodanca.enums.NivelExperiencia;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Column;
+
 import java.time.LocalDate;
-import br.com.projetodanca.enums.EstiloDanca;
-import br.com.projetodanca.enums.NivelExperiencia;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,21 +35,29 @@ public class Interessado {
     private LocalDate dataNascimento;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "nivel_experiencia", nullable = false, length = 30)
+    @Column(
+            name = "nivel_experiencia",
+            nullable = false,
+            length = 30
+    )
     private NivelExperiencia nivelExperiencia;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estilo_danca", nullable = false, length = 50)
+    @Column(
+            name = "estilo_danca",
+            nullable = false,
+            length = 50
+    )
     private EstiloDanca estiloDanca;
 
     @Column(name = "observacoes", length = 500)
     private String observacoes;
 
     @Column(
-       name = "data_cadastro",
-       nullable = false,
-       updatable = false,
-       insertable = false
+            name = "data_cadastro",
+            nullable = false,
+            updatable = false,
+            insertable = false
     )
     private LocalDateTime dataCadastro;
 
@@ -56,13 +65,13 @@ public class Interessado {
     }
 
     public Interessado(
-        String nome,
-        String email,
-        String telefone,
-        LocalDate dataNascimento,
-        NivelExperiencia nivelExperiencia,
-        EstiloDanca estiloDanca,
-        String observacoes
+            String nome,
+            String email,
+            String telefone,
+            LocalDate dataNascimento,
+            NivelExperiencia nivelExperiencia,
+            EstiloDanca estiloDanca,
+            String observacoes
     ) {
         this.nome = nome;
         this.email = email;
