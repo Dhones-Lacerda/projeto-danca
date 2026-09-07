@@ -5,6 +5,8 @@ import br.com.projetodanca.exception.EmailJaCadastradoException;
 import br.com.projetodanca.exception.InteressadoNaoEncontradoException;
 import br.com.projetodanca.repository.InteressadoRepository;
 import org.springframework.stereotype.Service;
+import jakarta.persistence.EntityManager;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,11 +14,17 @@ import java.util.List;
 public class InteressadoService {
 
     private final InteressadoRepository repository;
+    private final EntityManager entityManager;
 
-    public InteressadoService(InteressadoRepository repository) {
+    public InteressadoService(
+        InteressadoRepository repository,
+        EntityManager entityManager
+    ) {
         this.repository = repository;
+        this.entityManager = entityManager;
     }
 
+    @Transactional
     public Interessado cadastrar(Interessado interessado) {
         if (repository.existsByEmail(interessado.getEmail())) {
             throw new EmailJaCadastradoException(
@@ -24,11 +32,15 @@ public class InteressadoService {
             );
         }
 
-        return repository.save(interessado);
+        Interessado salvo = repository.save(interessado);
+
+        entityManager.refresh(salvo);
+
+        return salvo;
     }
 
     public List<Interessado> listarTodos() {
-        return repository.findAll();
+        return repository.findAllByOrderByDataCadastroDesc();
     }
 
     public Interessado buscarPorId(Long id) {
