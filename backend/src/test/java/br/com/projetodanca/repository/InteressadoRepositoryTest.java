@@ -1,15 +1,16 @@
 package br.com.projetodanca.repository;
 
 import br.com.projetodanca.entity.Interessado;
+import br.com.projetodanca.enums.EstiloDanca;
+import br.com.projetodanca.enums.NivelExperiencia;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import br.com.projetodanca.enums.EstiloDanca;
-import br.com.projetodanca.enums.NivelExperiencia;
 import org.springframework.transaction.annotation.Transactional;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -20,19 +21,22 @@ class InteressadoRepositoryTest {
 
     @Test
     void deveVerificarSeEmailExiste() {
-    Interessado interessado = new Interessado(
-        "Maria Silva",
-        "maria.teste@example.com",
-        "11999999999",
-        LocalDate.of(1995, 5, 20),
-        NivelExperiencia.INICIANTE,
-        EstiloDanca.SALSA,
-        "Teste do repository"
-      );
-    repository.save(interessado);
+        Interessado interessado = new Interessado(
+                "Maria Silva",
+                "maria.teste@example.com",
+                "11999999999",
+                LocalDate.of(1995, 5, 20),
+                NivelExperiencia.INICIANTE,
+                EstiloDanca.SALSA,
+                "Teste do repository"
+        );
 
-    boolean existe = repository.existsByEmail("maria.teste@example.com");
+        repository.save(interessado);
 
-    assertTrue(existe);
+        boolean existe = repository.existsByEmail(
+                "maria.teste@example.com"
+        );
+
+        assertTrue(existe);
     }
 }
