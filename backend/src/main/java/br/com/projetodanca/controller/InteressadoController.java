@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
@@ -28,9 +33,37 @@ public class InteressadoController {
         this.service = service;
     }
 
+    @Operation(
+        summary = "Cadastrar um novo interessado",
+        description = "Endpoint para cadastrar um novo interessado no sistema. Recebe os dados do interessado no corpo da requisição e retorna os dados cadastrados com o ID gerado."
+    )
+
+    @ApiResponse (
+        responseCode = "201", 
+        description = "Interessado cadastrado com sucesso",
+        content = @Content (
+                schema = @Schema(implementation = InteressadoResponse.class)
+        )
+    )
+
+    @ApiResponse (
+        responseCode = "400", 
+        description = "Dados enviados são inválidos. Verifique os dados enviados."
+    )
+
+    @ApiResponse (
+        responseCode = "409", 
+        description = "Já existe um interessado cadastrado com este e-mail."
+    )
+
+
     @PostMapping
     public ResponseEntity<InteressadoResponse> cadastrar(
-            @Valid @RequestBody InteressadoRequest request
+            @Valid 
+            @io.swagger.v3.oas.annotations.parameters.RequestBody (
+                description = "Dados do interessado a ser cadastrado"
+            )
+            @RequestBody InteressadoRequest request
     ) {
         Interessado interessado = new Interessado(
                 request.nome(),
@@ -61,6 +94,21 @@ public class InteressadoController {
                 .body(response);
     }
 
+    @Operation (
+        summary = "Listar todos os interessados",
+        description = "Retorna todos os interessados cadastrados, ordenados do mais recente para o mais antigo."
+    )
+
+    @ApiResponse (
+        responseCode = "200",
+        description = "Lista de interessados retornada com sucesso",
+        content = @Content (
+                schema = @Schema(
+                        implementation = InteressadoResponse.class
+                )
+        )
+    )
+
     @GetMapping
     public ResponseEntity<List<InteressadoResponse>> listarTodos() {
 
@@ -83,8 +131,34 @@ public class InteressadoController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation (
+        summary = "Buscar interessado por ID",
+        description = "Retorna os dados de um interessado específico com base no ID fornecido."
+    )
+
+        @ApiResponse (
+                responseCode = "200",
+                description = "Interessado encontrado com sucesso",
+                content = @Content (
+                        schema = @Schema(
+                                implementation = InteressadoResponse.class
+                        )
+                )
+        )
+
+        @ApiResponse (
+                responseCode = "404",
+                description = "Interessado não encontrado com o ID fornecido"
+        )
+
     @GetMapping("/{id}")
     public ResponseEntity<InteressadoResponse> buscarPorId(
+            @Parameter  (
+                
+                description = "ID do interessado a ser buscado",
+                example = "1"
+            )
+
             @PathVariable Long id
     ) {
         Interessado interessado = service.buscarPorId(id);
@@ -104,9 +178,47 @@ public class InteressadoController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation (
+        summary = "Atualizar dados de um interessado",
+        description = "Atualiza os dados de um interessado específico com base no ID fornecido."
+    )
+
+    @ApiResponse (
+        responseCode = "200",
+        description = "Interessado atualizado com sucesso",
+        content = @Content (
+                schema = @Schema(
+                        implementation = InteressadoResponse.class
+                )
+        )
+    )
+
+        @ApiResponse (
+                responseCode = "400",
+                description = "Dados enviados são inválidos."
+        )
+
+        @ApiResponse (
+                responseCode = "404",
+                description = "Interessado não encontrado."
+        )
+
+        @ApiResponse (
+                responseCode = "409",
+                description = "Já existe um interessado cadastrado com este e-mail."
+        )
+
     @PutMapping("/{id}")
     public ResponseEntity<InteressadoResponse> atualizar(
+            @Parameter (
+                description = "ID do interessado a ser atualizado",
+                example = "1"
+            ) 
+
             @PathVariable Long id,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody (
+                description = "Dados atualizados do interessado"
+            )
             @Valid @RequestBody InteressadoRequest request
     ) {
         Interessado dadosAtualizados = new Interessado(
@@ -139,8 +251,29 @@ public class InteressadoController {
         return ResponseEntity.ok(response);
     }
 
+        @Operation (
+                summary = "Excluir um interessado",
+                description = "Exclui um interessado específico com base no ID fornecido."
+        )
+
+        @ApiResponse (
+                responseCode = "204",
+                description = "Interessado excluído com sucesso"
+        )
+
+        @ApiResponse (
+                responseCode = "404",
+                description = "Interessado não encontrado."
+        )
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(
+        @Parameter (
+                        description = "ID do interessado a ser excluído",
+                        example = "1"
+                )
+        @PathVariable Long id
+    ) {
         service.excluir(id);
 
         return ResponseEntity.noContent().build();
